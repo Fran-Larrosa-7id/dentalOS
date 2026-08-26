@@ -138,7 +138,10 @@ import { IconComponent } from '../shared/icon/icon.component';
           </header>
           <div class="divide-y divide-slate-200">
             @for (order of dentistOrders(); track order.id) {
-              <div class="p-4">
+              <a
+                [routerLink]="['/orders', order.id]"
+                class="block cursor-pointer p-4 transition hover:bg-violet-50/50"
+              >
                 <div class="flex items-start justify-between">
                   <p class="technical-id text-xs font-bold text-slate-500">
                     OT #{{ order.number }}
@@ -160,7 +163,7 @@ import { IconComponent } from '../shared/icon/icon.component';
                     dateShort(order.dueDate)
                   }}</span>
                 </div>
-              </div>
+              </a>
             } @empty {
               <p class="p-5 text-sm text-slate-500">No hay trabajos fuera del laboratorio.</p>
             }
