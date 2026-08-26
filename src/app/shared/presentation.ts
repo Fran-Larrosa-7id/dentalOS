@@ -21,24 +21,24 @@ export const relativeTime = (value: string) => {
   imports: [RouterLink],
   template: ` <a
     [routerLink]="['/orders', order.id]"
-    class="block border border-slate-200 bg-white p-3 transition hover:border-blue-300 hover:shadow-sm"
+    class="block border border-slate-200 bg-white px-4 py-3 transition hover:border-slate-300 hover:shadow-sm"
+    [class.border-l-red-500]="tone === 'urgent'"
+    [class.border-l-orange-400]="tone === 'attention'"
+    [class.border-l-blue-600]="tone === 'info'"
+    [class.border-l-[3px]]="tone !== 'default'"
   >
     <div class="flex items-start justify-between gap-2">
-      <span class="text-xs font-bold text-slate-500">OT #{{ order.number }}</span
-      ><span
-        [class]="
-          order.priority === 'URGENT' ? 'bg-red-50 text-red-700' : 'bg-slate-100 text-slate-600'
-        "
-        class="px-1.5 py-0.5 text-[10px] font-bold tracking-wide"
-        >{{ order.priority === 'URGENT' ? 'URGENTE' : 'NORMAL' }}</span
-      >
+      <span class="technical-id text-[11px] font-bold text-slate-500">OT #{{ order.number }}</span
+      ><span class="text-[11px] font-bold" [class.text-red-700]="order.priority === 'URGENT'">{{
+        order.priority === 'URGENT' ? 'URGENTE' : ''
+      }}</span>
     </div>
-    <p class="mt-2 font-semibold text-slate-900">{{ store.type(order)?.name }}</p>
+    <p class="mt-2 font-bold text-slate-900">{{ store.type(order)?.name }}</p>
     <p class="text-sm text-slate-500">
       {{ store.dentist(order)?.name }} · {{ order.patientReference }}
     </p>
     <div class="mt-3 flex items-center justify-between text-xs">
-      <span class="font-medium text-slate-600">{{ store.stage(order)?.name }}</span
+      <span class="font-semibold text-slate-700">{{ store.stage(order)?.name }}</span
       ><span [class.text-red-600]="isDue(order)" class="font-semibold text-slate-500">{{
         dateShort(order.dueDate)
       }}</span>
@@ -47,6 +47,7 @@ export const relativeTime = (value: string) => {
 })
 export class OrderCardComponent {
   @Input({ required: true }) order!: WorkOrder;
+  @Input() tone: 'default' | 'urgent' | 'attention' | 'info' = 'default';
   readonly store = inject(WorkOrderStore);
   readonly dateShort = dateShort;
   isDue(order: WorkOrder) {
@@ -64,15 +65,20 @@ export class OrderCardComponent {
           class="absolute -left-[27px] top-0.5 grid h-5 w-5 place-items-center rounded-full border-2 border-white bg-blue-600 text-white"
           ><app-icon [name]="icon(event.type)" class="size-3"
         /></span>
-        <p class="text-sm font-semibold text-slate-800">{{ label(event.type) }}</p>
+        <div class="flex items-baseline justify-between gap-3">
+          <p class="text-sm font-semibold text-slate-800">{{ label(event.type) }}</p>
+          <time class="shrink-0 text-xs text-slate-400">{{
+            event.timestamp | date: 'HH:mm' : '' : 'es-AR'
+          }}</time>
+        </div>
         @if (event.note) {
           <p class="mt-1 text-sm text-slate-500">{{ event.note }}</p>
         }
         @if (event.reworkReason) {
           <p class="mt-1 text-sm text-amber-700">{{ event.reworkReason }}</p>
         }
-        <time class="mt-1 block text-xs text-slate-400">{{
-          event.timestamp | date: 'd MMM, HH:mm' : '' : 'es-AR'
+        <time class="mt-1 block text-[11px] font-medium uppercase tracking-wide text-slate-400">{{
+          event.timestamp | date: 'd MMM' : '' : 'es-AR'
         }}</time>
       </li>
     }

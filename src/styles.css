@@ -4,53 +4,278 @@
 @import 'air-datepicker/air-datepicker.css';
 
 :root {
-  --bg-app: #f5f7fb; --bg-surface: #fff; --bg-subtle: #f8fafc;
-  --navy-950: #06132d; --navy-900: #0a1b38; --primary: #2554e8;
-  --primary-hover: #1e45c7; --text-primary: #111827; --text-secondary: #64748b;
-  --text-muted: #94a3b8; --border: #e2e8f0; --border-strong: #cbd5e1;
-  --danger: #dc2626; --danger-soft: #fef2f2; --warning: #d97706;
-  --dentist: #7c3aed; --dentist-soft: #f5f3ff; --lab: #2563eb; --lab-soft: #eff6ff;
+  --bg-app: #f4f7fb;
+  --bg-surface: #fff;
+  --bg-subtle: #f8fafc;
+  --navy-950: #06132d;
+  --navy-900: #0a1b38;
+  --primary: #2554e8;
+  --primary-hover: #1e45c7;
+  --text-primary: #111827;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --danger: #dc2626;
+  --danger-soft: #fef2f2;
+  --warning: #d97706;
+  --dentist: #7c3aed;
+  --dentist-soft: #f5f3ff;
+  --lab: #2563eb;
+  --lab-soft: #eff6ff;
 }
 
-html { background: var(--bg-app); }
-body { margin: 0; background: var(--bg-app); color: var(--text-primary); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 14px; }
-button, input, select { font: inherit; }
-button, a, input, select { transition: border-color .16s ease, background-color .16s ease, box-shadow .16s ease, color .16s ease, transform .16s ease; }
-button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid color-mix(in srgb, var(--primary) 25%, transparent); outline-offset: 2px; }
-input, select { border-color: var(--border-strong) !important; border-radius: 8px; background: var(--bg-surface); min-height: 44px; }
-input:focus, select:focus { border-color: var(--primary) !important; box-shadow: 0 0 0 3px rgb(37 84 232 / .12); outline: 0; }
+html {
+  background: var(--bg-app);
+}
+body {
+  margin: 0;
+  background: var(--bg-app);
+  color: var(--text-primary);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  font-size: 14px;
+}
+button,
+input,
+select {
+  font: inherit;
+}
+button,
+a,
+input,
+select {
+  transition:
+    border-color 0.16s ease,
+    background-color 0.16s ease,
+    box-shadow 0.16s ease,
+    color 0.16s ease,
+    transform 0.16s ease;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--primary) 25%, transparent);
+  outline-offset: 2px;
+}
+input,
+select {
+  border-color: var(--border-strong) !important;
+  border-radius: 8px;
+  background: var(--bg-surface);
+  min-height: 44px;
+}
+input:focus,
+select:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgb(37 84 232 / 0.12);
+  outline: 0;
+}
 
-app-order-card > a { border-radius: 10px; border-color: var(--border); box-shadow: 0 1px 2px rgb(15 23 42 / .03); }
-app-order-card > a:hover { border-color: #a5bdfd; box-shadow: 0 6px 16px rgb(15 23 42 / .08); transform: translateY(-1px); }
-app-timeline { display: block; border-radius: 12px; background: var(--bg-surface); padding: 24px; }
-app-smart-label > section { border-radius: 10px; border-color: var(--border-strong); box-shadow: 0 5px 14px rgb(15 23 42 / .05); }
+app-order-card > a {
+  border-radius: 0;
+  border-color: var(--border);
+  box-shadow: none;
+}
+app-order-card > a:hover {
+  border-color: var(--border-strong);
+  box-shadow: none;
+  transform: none;
+}
+app-timeline {
+  display: block;
+  background: var(--bg-surface);
+  padding: 22px 24px;
+}
+app-smart-label > section {
+  border-radius: 2px;
+  border-color: #0f172a;
+  box-shadow: none;
+}
 
-@media (min-width: 1024px) { main { padding-top: 36px !important; padding-bottom: 40px !important; } }
-@media (max-width: 640px) { body { font-size: 14px; } main { padding: 20px !important; } }
+@media (min-width: 1024px) {
+  main {
+    padding-top: 36px !important;
+    padding-bottom: 40px !important;
+  }
+}
+@media (max-width: 640px) {
+  body {
+    font-size: 14px;
+  }
+  main {
+    padding: 20px !important;
+  }
+}
 
-.page-kicker { color: var(--primary); font-size: 11px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
-.page-title { margin-top: 6px; font-size: clamp(28px, 3vw, 34px); font-weight: 720; letter-spacing: -.035em; line-height: 1.12; }
-.page-subtitle { margin-top: 6px; color: var(--text-secondary); font-size: 15px; }
-.surface { border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
-.section-label { color: var(--text-muted); font-size: 11px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
-.button-primary { border-radius: 9px; background: var(--primary); color: #fff; font-weight: 700; padding: 11px 16px; }
-.button-primary:hover { background: var(--primary-hover); }
-.button-secondary { border: 1px solid var(--border-strong); border-radius: 9px; background: #fff; color: var(--text); font-weight: 650; padding: 10px 14px; }
-.button-secondary:hover { border-color: #a9b8cc; background: var(--surface-muted); }
-.stat-card { border: 1px solid var(--border); border-radius: 12px; background: var(--surface); padding: 18px; }
-.stat-card:hover { border-color: #bbcaf8; box-shadow: 0 4px 14px rgb(15 23 42 / .05); }
-.input-label { display:block; color:#334155; font-size:12px; font-weight:700; letter-spacing:.045em; text-transform:uppercase; }
-.input-label input,.input-label select { display:block; margin-top:7px; width:100%; padding:0 12px; }
-.tab { border-bottom: 2px solid transparent; color: var(--text-secondary); font-size:13px; font-weight:700; padding:10px 4px; }
-.tab.active,.tab:hover { border-color:var(--primary); color:var(--text); }
-.location-lab { background:var(--lab-soft); color:var(--lab); }
-.location-dentist { background:var(--dentist-soft); color:var(--dentist); }
-.air-datepicker { --adp-accent-color: var(--primary); --adp-background-color: #fff; --adp-border-color: var(--border); --adp-border-radius: 12px; border-radius: 12px; box-shadow: 0 12px 28px rgb(15 23 42 / .14); font-family: inherit; }
-.air-datepicker-cell.-selected-, .air-datepicker-cell.-selected-.-current- { background: var(--primary); }
-.air-datepicker-cell.-selected-:hover { background: var(--primary-hover); }
+.page-kicker {
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.page-title {
+  margin-top: 6px;
+  font-size: clamp(28px, 3vw, 34px);
+  font-weight: 720;
+  letter-spacing: -0.035em;
+  line-height: 1.12;
+}
+.page-subtitle {
+  margin-top: 6px;
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+.surface {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-surface);
+}
+.section-label {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.button-primary {
+  border-radius: 9px;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  padding: 11px 16px;
+}
+.button-primary:hover {
+  background: var(--primary-hover);
+}
+.button-secondary {
+  border: 1px solid var(--border-strong);
+  border-radius: 9px;
+  background: #fff;
+  color: var(--text);
+  font-weight: 650;
+  padding: 10px 14px;
+}
+.button-secondary:hover {
+  border-color: #a9b8cc;
+  background: var(--surface-muted);
+}
+.stat-card {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 4px 18px;
+  border-left: 1px solid var(--border);
+}
+.stat-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: none;
+  transform: none;
+}
+.stat-card:first-child {
+  border-left: 0;
+}
+.stat-card:nth-child(3) .section-label,
+.stat-card:nth-child(3) .text-3xl {
+  color: var(--danger);
+}
+.input-label {
+  display: block;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+.input-label input,
+.input-label select {
+  display: block;
+  margin-top: 7px;
+  width: 100%;
+  padding: 0 12px;
+}
+.tab {
+  border-bottom: 2px solid transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 4px;
+}
+.tab.active,
+.tab:hover {
+  border-color: var(--primary);
+  color: var(--text);
+}
+.location-lab {
+  background: var(--lab-soft);
+  color: var(--lab);
+}
+.location-dentist {
+  background: var(--dentist-soft);
+  color: var(--dentist);
+}
+.technical-id {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+  letter-spacing: 0.035em;
+}
+.detail-field dt {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.detail-field dd {
+  margin-top: 5px;
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+.detail-field--key dd {
+  font-size: 21px;
+  font-weight: 750;
+  letter-spacing: -0.025em;
+}
+.air-datepicker {
+  --adp-accent-color: var(--primary);
+  --adp-background-color: #fff;
+  --adp-border-color: var(--border);
+  --adp-border-radius: 12px;
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgb(15 23 42 / 0.14);
+  font-family: inherit;
+}
+.air-datepicker-cell.-selected-,
+.air-datepicker-cell.-selected-.-current- {
+  background: var(--primary);
+}
+.air-datepicker-cell.-selected-:hover {
+  background: var(--primary-hover);
+}
 
 @media print {
-  body * { visibility: hidden; }
-  .label-print, .label-print * { visibility: visible; }
-  .label-print { position: absolute; left: 0; top: 0; width: 100%; border: 0 !important; }
+  body * {
+    visibility: hidden;
+  }
+  .label-print,
+  .label-print * {
+    visibility: visible;
+  }
+  .label-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    border: 0 !important;
+  }
 }

@@ -119,18 +119,18 @@ export class TodayPage {
     <section class="mt-8 grid gap-6 xl:grid-cols-[minmax(0,1fr)_330px]">
       <div>
         <p class="section-label mb-3">En laboratorio</p>
-        <div class="space-y-4">
+        <div class="space-y-9">
           @for (group of groups(); track group.id) {
-            <section class="surface overflow-hidden">
+            <section>
               <button
-                class="flex w-full items-center justify-between bg-slate-50 px-5 py-4 text-left"
+                class="flex w-full items-center justify-between border-b border-slate-300 pb-3 text-left"
               >
-                <span class="font-bold tracking-wide">{{ group.name.toUpperCase() }}</span
-                ><span class="rounded-md border border-slate-200 bg-white px-2 py-0.5 text-sm">{{
-                  group.orders.length
-                }}</span>
+                <span class="flex items-baseline gap-3"
+                  ><b class="technical-id text-sm text-blue-700">0{{ group.order }}</b
+                  ><span class="font-bold tracking-wide">{{ group.name.toUpperCase() }}</span></span
+                ><span class="text-sm text-slate-500">{{ group.orders.length }} trabajos</span>
               </button>
-              <div class="grid gap-4 p-4 md:grid-cols-2 lg:grid-cols-3">
+              <div class="grid gap-x-7 gap-y-6 pt-4 md:grid-cols-2 lg:grid-cols-3">
                 @for (stage of group.stages; track stage.id) {
                   <div>
                     <p class="mb-2 text-xs font-bold uppercase tracking-wide text-slate-500">
@@ -140,9 +140,7 @@ export class TodayPage {
                       @for (order of stage.orders; track order.id) {
                         <app-order-card [order]="order" />
                       } @empty {
-                        <p class="rounded-lg bg-slate-50 p-3 text-xs text-slate-400">
-                          Sin trabajos en esta etapa.
-                        </p>
+                        <p class="py-3 text-xs text-slate-400">— sin trabajos</p>
                       }
                     </div>
                   </div>
@@ -152,8 +150,8 @@ export class TodayPage {
           }
         </div>
       </div>
-      <aside class="rounded-xl border border-violet-200 bg-violet-50 p-5">
-        <p class="section-label text-violet-700">En consultorio</p>
+      <aside class="border-l border-slate-300 pl-6">
+        <p class="section-label">Fuera del laboratorio</p>
         <h2 class="mt-1 text-lg font-bold text-violet-950">Esperando devolución</h2>
         <div class="mt-4 space-y-3">
           @for (order of dentistOrders(); track order.id) {
