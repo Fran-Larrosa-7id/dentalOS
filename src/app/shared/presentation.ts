@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import QRCode from 'qrcode';
 import { WorkOrder } from '../domain/models';
 import { WorkOrderStore } from '../core/work-order.store';
+import { IconComponent } from './icon/icon.component';
 
 export const dateShort = (value: string) =>
   new Intl.DateTimeFormat('es-AR', { day: '2-digit', month: 'short' })
@@ -55,20 +56,26 @@ export class OrderCardComponent {
 
 @Component({
   selector: 'app-timeline',
-  imports: [CommonModule, DatePipe],
+  imports: [CommonModule, DatePipe, IconComponent],
   template: ` <ol class="border-l border-slate-200 pl-5">
     @for (event of events.slice().reverse(); track event.id) {
-    <li class="relative mb-6 last:mb-0">
-      <span
-        class="absolute -left-[25px] top-1 grid h-3 w-3 place-items-center rounded-full border-2 border-white bg-blue-600"
-      ></span>
-      <p class="text-sm font-semibold text-slate-800">{{ label(event.type) }}</p>
-      @if (event.note) { <p class="mt-1 text-sm text-slate-500">{{ event.note }}</p> }
-      @if (event.reworkReason) { <p class="mt-1 text-sm text-amber-700">{{ event.reworkReason }}</p> }
-      <time class="mt-1 block text-xs text-slate-400">{{
-        event.timestamp | date: 'd MMM, HH:mm' : '' : 'es-AR'
-      }}</time>
-    </li> }
+      <li class="relative mb-6 last:mb-0">
+        <span
+          class="absolute -left-[27px] top-0.5 grid h-5 w-5 place-items-center rounded-full border-2 border-white bg-blue-600 text-white"
+          ><app-icon [name]="icon(event.type)" class="size-3"
+        /></span>
+        <p class="text-sm font-semibold text-slate-800">{{ label(event.type) }}</p>
+        @if (event.note) {
+          <p class="mt-1 text-sm text-slate-500">{{ event.note }}</p>
+        }
+        @if (event.reworkReason) {
+          <p class="mt-1 text-sm text-amber-700">{{ event.reworkReason }}</p>
+        }
+        <time class="mt-1 block text-xs text-slate-400">{{
+          event.timestamp | date: 'd MMM, HH:mm' : '' : 'es-AR'
+        }}</time>
+      </li>
+    }
   </ol>`,
 })
 export class TimelineComponent {
@@ -90,6 +97,23 @@ export class TimelineComponent {
       )[type] ?? type
     );
   }
+  icon(type: string) {
+    return (
+      (
+        {
+          CREATED: 'document',
+          STAGE_COMPLETED: 'check',
+          STAGE_CHANGED: 'chevron',
+          SENT_TO_DENTIST: 'share',
+          RETURNED_TO_LAB: 'arrow',
+          REWORK_REQUESTED: 'copy',
+          PHOTO_ADDED: 'copy',
+          NOTE_ADDED: 'document',
+          COMPLETED: 'check',
+        } as const
+      )[type as keyof Record<string, string>] ?? 'document'
+    );
+  }
 }
 
 @Component({
@@ -108,18 +132,18 @@ export class TimelineComponent {
       <div class="mt-5 border-y border-slate-300 py-3 text-sm">
         <p class="font-bold">{{ store.dentist(order)?.name }}</p>
         <p>{{ order.patientReference }} · {{ store.type(order)?.name }}</p>
-        @if (order.color) { <p>Color {{ order.color }}</p> }
+        @if (order.color) {
+          <p>Color {{ order.color }}</p>
+        }
       </div>
       <div class="mt-5 flex items-end justify-between gap-4">
         <div>
           <p class="text-[10px] font-bold tracking-widest">ENTREGA</p>
           <p class="text-lg font-black">{{ dateShort(order.dueDate) }}</p>
         </div>
-        @if (qrData()) { <img
-          [src]="qrData()"
-          class="h-28 w-28"
-          alt="Código QR para abrir esta orden"
-        /> }
+        @if (qrData()) {
+          <img [src]="qrData()" class="h-28 w-28" alt="Código QR para abrir esta orden" />
+        }
       </div>
     </section>
     <button
@@ -135,7 +159,9 @@ export class SmartLabelComponent {
     this._order = value;
     void this.generate(value.qrToken);
   }
-  get order() { return this._order; }
+  get order() {
+    return this._order;
+  }
   readonly store = inject(WorkOrderStore);
   readonly qrData = signal('');
   readonly dateShort = dateShort;

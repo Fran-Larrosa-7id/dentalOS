@@ -13,7 +13,7 @@ export interface WorkOrderEvent { id: string; type: EventType; timestamp: string
 export interface Attachment { id: string; name: string; type: 'PHOTO' | 'FILE'; createdAt: string; }
 export interface WorkOrder {
   id: string; number: number; dentistId: string; patientReference: string; workTypeId: string;
-  color?: string; priority: Priority; workflowId: string; currentStageId: string; location: Location;
+  color?: string; patientAge?: number; workDescription?: string; priority: Priority; workflowId: string; currentStageId: string; location: Location;
   operationalStatus: OperationalStatus; technicianId?: string; createdAt: string; dueDate: string;
   lastMovementAt: string; qrToken: string; timeline: WorkOrderEvent[]; attachments: Attachment[];
 }

@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import 'tailwindcss';
+@import 'air-datepicker/air-datepicker.css';
 
 :root {
   --bg-app: #f5f7fb; --bg-surface: #fff; --bg-subtle: #f8fafc;
@@ -44,6 +45,9 @@ app-smart-label > section { border-radius: 10px; border-color: var(--border-stro
 .tab.active,.tab:hover { border-color:var(--primary); color:var(--text); }
 .location-lab { background:var(--lab-soft); color:var(--lab); }
 .location-dentist { background:var(--dentist-soft); color:var(--dentist); }
+.air-datepicker { --adp-accent-color: var(--primary); --adp-background-color: #fff; --adp-border-color: var(--border); --adp-border-radius: 12px; border-radius: 12px; box-shadow: 0 12px 28px rgb(15 23 42 / .14); font-family: inherit; }
+.air-datepicker-cell.-selected-, .air-datepicker-cell.-selected-.-current- { background: var(--primary); }
+.air-datepicker-cell.-selected-:hover { background: var(--primary-hover); }
 
 @media print {
   body * { visibility: hidden; }

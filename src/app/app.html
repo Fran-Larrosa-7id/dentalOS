@@ -2,19 +2,62 @@
   <router-outlet />
 } @else {
   <div class="min-h-dvh bg-[var(--bg-app)] lg:grid lg:grid-cols-[256px_1fr]">
-    <aside class="border-b border-slate-800 bg-[var(--navy-950)] px-4 py-6 text-slate-100 lg:min-h-dvh lg:border-r lg:border-b-0 lg:px-5">
-      <a routerLink="/today" class="flex items-center gap-3 px-2 text-xl font-bold tracking-tight"><span class="grid h-8 w-8 place-items-center rounded-lg bg-blue-600 text-sm">D</span><span>DentalOS<small class="mt-0.5 block text-[10px] font-medium tracking-[.14em] text-slate-400">OPERATIONS</small></span></a>
+    <aside
+      class="border-b border-slate-800 bg-[var(--navy-950)] px-4 py-6 text-slate-100 lg:min-h-dvh lg:border-r lg:border-b-0 lg:px-5"
+    >
+      <a routerLink="/today" class="flex items-center gap-3 px-2 text-xl font-bold tracking-tight"
+        ><span class="grid h-8 w-8 place-items-center rounded-lg bg-blue-600 text-sm">D</span
+        ><span
+          >DentalOS<small
+            class="mt-0.5 block text-[10px] font-medium tracking-[.14em] text-slate-400"
+            >OPERATIONS</small
+          ></span
+        ></a
+      >
       <p class="mt-10 px-3 text-[10px] font-bold tracking-[.18em] text-slate-500">OPERACIÓN</p>
-      <nav class="mt-3 flex gap-1 overflow-x-auto lg:block lg:space-y-1" aria-label="Navegación principal">
-        <a routerLink="/today" routerLinkActive="border-l-2 border-blue-500 bg-slate-800 text-white" class="block whitespace-nowrap rounded-md px-3 py-2.5 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white">Inicio</a>
-        <a routerLink="/production" routerLinkActive="border-l-2 border-blue-500 bg-slate-800 text-white" class="block whitespace-nowrap rounded-md px-3 py-2.5 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white">Producción</a>
-        <a routerLink="/orders" routerLinkActive="border-l-2 border-blue-500 bg-slate-800 text-white" class="block whitespace-nowrap rounded-md px-3 py-2.5 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white">Órdenes</a>
+      <nav
+        class="mt-3 flex gap-1 overflow-x-auto lg:block lg:space-y-1"
+        aria-label="Navegación principal"
+      >
+        <a
+          routerLink="/today"
+          routerLinkActive="border-l-2 border-blue-500 bg-slate-800 text-white"
+          class="flex items-center gap-3 whitespace-nowrap rounded-md px-3 py-2.5 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white"
+          ><app-icon name="home" class="size-4" />Inicio</a
+        >
+        <a
+          routerLink="/production"
+          routerLinkActive="border-l-2 border-blue-500 bg-slate-800 text-white"
+          class="flex items-center gap-3 whitespace-nowrap rounded-md px-3 py-2.5 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white"
+          ><app-icon name="briefcase" class="size-4" />Producción</a
+        >
+        <a
+          routerLink="/orders"
+          routerLinkActive="border-l-2 border-blue-500 bg-slate-800 text-white"
+          class="flex items-center gap-3 whitespace-nowrap rounded-md px-3 py-2.5 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white"
+          ><app-icon name="document" class="size-4" />Órdenes</a
+        >
         <p class="mt-7 px-3 text-[10px] font-bold tracking-[.18em] text-slate-500">DIRECTORIO</p>
-        <a routerLink="/dentists" routerLinkActive="border-l-2 border-blue-500 bg-slate-800 text-white" class="mt-2 block whitespace-nowrap rounded-md px-3 py-2.5 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white">Odontólogos</a>
+        <a
+          routerLink="/dentists"
+          routerLinkActive="border-l-2 border-blue-500 bg-slate-800 text-white"
+          class="mt-2 flex items-center gap-3 whitespace-nowrap rounded-md px-3 py-2.5 text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white"
+          ><app-icon name="briefcase" class="size-4" />Odontólogos</a
+        >
       </nav>
-      <a routerLink="/orders/new" class="mt-8 block rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-bold text-white shadow-sm hover:bg-blue-500">+ Nueva orden</a>
-      <a routerLink="/settings" class="mt-5 block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white">Configuración</a>
+      <a
+        routerLink="/orders/new"
+        class="mt-8 flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-bold text-white shadow-sm hover:bg-blue-500"
+        ><app-icon name="plus" class="size-4" />Nueva orden</a
+      >
+      <a
+        routerLink="/settings"
+        class="mt-5 block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white"
+        >Configuración</a
+      >
     </aside>
-    <div class="min-w-0"><main class="mx-auto max-w-[1360px] p-5 md:p-8 lg:p-10"><router-outlet /></main></div>
+    <div class="min-w-0">
+      <main class="mx-auto max-w-[1360px] p-5 md:p-8 lg:p-10"><router-outlet /></main>
+    </div>
   </div>
 }

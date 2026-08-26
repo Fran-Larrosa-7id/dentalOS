@@ -11,7 +11,8 @@ registerLocaleData(localeEsAr);
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes), provideClientHydration(),
-    { provide: LOCALE_ID, useValue: 'es-AR' }
-  ]
+    provideRouter(routes),
+    provideClientHydration(),
+    { provide: LOCALE_ID, useValue: 'es-AR' },
+  ],
 };
