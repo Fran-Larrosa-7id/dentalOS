@@ -54,7 +54,9 @@ import { OrderCardComponent } from '../shared/presentation';
           </div>
           <div class="space-y-2 pt-3">
             @for (order of urgent(); track order.id) {
-              <div class="border-l-[3px] border-red-500"><app-order-card [order]="order" /></div>
+              <div class="border-l-[3px] border-red-500 pl-3">
+                <app-order-card [order]="order" />
+              </div>
             } @empty {
               <p class="py-12 text-center text-sm text-slate-400">Sin trabajos urgentes</p>
             }
@@ -70,7 +72,9 @@ import { OrderCardComponent } from '../shared/presentation';
           </div>
           <div class="space-y-2 pt-3">
             @for (order of needsAttention(); track order.id) {
-              <div class="border-l-[3px] border-orange-400"><app-order-card [order]="order" /></div>
+              <div class="border-l-[3px] border-orange-400 pl-3">
+                <app-order-card [order]="order" />
+              </div>
             } @empty {
               <p class="py-12 text-center text-sm text-slate-400">Sin trabajos para revisar</p>
             }
@@ -86,7 +90,9 @@ import { OrderCardComponent } from '../shared/presentation';
           </div>
           <div class="space-y-2 pt-3">
             @for (order of information(); track order.id) {
-              <div class="border-l-[3px] border-blue-600"><app-order-card [order]="order" /></div>
+              <div class="border-l-[3px] border-blue-600 pl-3">
+                <app-order-card [order]="order" />
+              </div>
             } @empty {
               <div class="grid min-h-70 place-items-center text-center text-sm text-slate-400">
                 <span class="text-2xl"

@@ -84,6 +84,9 @@ app-order-card > a {
   border-color: var(--border);
   box-shadow: none;
 }
+app-order-card {
+  display: block;
+}
 app-order-card > a:hover {
   border-color: var(--border-strong);
   box-shadow: none;

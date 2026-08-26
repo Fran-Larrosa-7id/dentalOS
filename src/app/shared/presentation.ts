@@ -58,7 +58,7 @@ export class OrderCardComponent {
 @Component({
   selector: 'app-timeline',
   imports: [CommonModule, DatePipe, IconComponent],
-  template: ` <ol class="border-l border-slate-200 pl-5">
+  template: ` <ol class="ml-3 border-l border-slate-200 pl-5">
     @for (event of events.slice().reverse(); track event.id) {
       <li class="relative mb-6 last:mb-0">
         <span
