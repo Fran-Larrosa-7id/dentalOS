@@ -87,45 +87,77 @@ import { IconComponent } from '../shared/icon/icon.component';
     <section class="mt-8 grid gap-5 xl:grid-cols-[minmax(0,1fr)_330px]">
       <div>
         <p class="section-label mb-3">En laboratorio</p>
-        <div class="space-y-3">
-          @for (group of groups(); track group.id) {
-            <section class="overflow-hidden rounded-lg border border-slate-200 bg-white">
-              <header class="flex items-center justify-between border-b border-slate-200 px-4 py-3">
-                <button class="flex items-center gap-4">
-                  <app-icon name="chevron" class="size-4 -rotate-90" /><span
-                    class="technical-id text-xl font-bold text-blue-700"
-                    >0{{ group.order }}</span
-                  ><span class="font-bold uppercase tracking-wide">{{ group.name }}</span></button
-                ><span class="text-sm text-slate-500"
-                  >{{ group.orders.length }}
-                  {{ group.orders.length === 1 ? 'trabajo' : 'trabajos' }}</span
-                >
-              </header>
-              <div
-                class="grid divide-y divide-slate-200 md:grid-cols-2 md:divide-x md:divide-y-0 lg:grid-cols-3"
+        <div class="space-y-7">
+          @for (workflow of workflowBoards(); track workflow.id) {
+            <section>
+              <button
+                (click)="toggleWorkflow(workflow.id)"
+                class="flex w-full items-center justify-between border-b-2 border-slate-300 pb-3 text-left"
               >
-                @for (stage of group.stages; track stage.id) {
-                  <div class="min-w-0 p-4">
-                    <div class="mb-3 flex items-center justify-between">
-                      <p class="text-[11px] font-bold uppercase tracking-wide text-slate-500">
-                        {{ stage.name }}
-                      </p>
-                      <span class="text-slate-500">•••</span>
-                    </div>
-                    <div class="space-y-2">
-                      @for (order of stage.orders; track order.id) {
-                        <app-order-card [order]="order" />
-                      } @empty {
-                        <div
-                          class="grid min-h-28 place-items-center rounded border border-dashed border-slate-300 text-center text-xs text-slate-400"
+                <span
+                  ><span class="section-label text-blue-700">Workflow</span>
+                  <h2 class="mt-1 text-xl font-bold uppercase tracking-tight">
+                    {{ workflow.name }}
+                    <span class="text-sm font-medium text-slate-500"
+                      >· {{ workflow.orders.length }} trabajos</span
+                    >
+                  </h2></span
+                >
+                <app-icon
+                  name="chevron"
+                  class="size-4 transition"
+                  [class.rotate-90]="!isCollapsed(workflow.id)"
+                />
+              </button>
+              @if (!isCollapsed(workflow.id)) {
+                <div class="mt-3 space-y-3">
+                  @for (group of workflow.groups; track group.id) {
+                    <section class="overflow-hidden rounded-lg border border-slate-200 bg-white">
+                      <header
+                        class="flex items-center justify-between border-b border-slate-200 px-4 py-3"
+                      >
+                        <span class="flex items-center gap-4"
+                          ><span class="technical-id text-xl font-bold text-blue-700"
+                            >0{{ group.order }}</span
+                          ><span class="font-bold uppercase tracking-wide">{{
+                            group.name
+                          }}</span></span
+                        ><span class="text-sm text-slate-500"
+                          >{{ group.orders.length }}
+                          {{ group.orders.length === 1 ? 'trabajo' : 'trabajos' }}</span
                         >
-                          <span>⌑<span class="mt-2 block">Sin trabajos</span></span>
-                        </div>
-                      }
-                    </div>
-                  </div>
-                }
-              </div>
+                      </header>
+                      <div
+                        class="grid divide-y divide-slate-200 md:grid-cols-2 md:divide-x md:divide-y-0 lg:grid-cols-3"
+                      >
+                        @for (stage of group.stages; track stage.id) {
+                          <div class="min-w-0 p-4">
+                            <div class="mb-3 flex items-center justify-between">
+                              <p
+                                class="text-[11px] font-bold uppercase tracking-wide text-slate-500"
+                              >
+                                {{ stage.name }}
+                              </p>
+                              <span class="text-slate-500">•••</span>
+                            </div>
+                            <div class="space-y-2">
+                              @for (order of stage.orders; track order.id) {
+                                <app-order-card [order]="order" />
+                              } @empty {
+                                <div
+                                  class="grid min-h-28 place-items-center rounded border border-dashed border-slate-300 text-center text-xs text-slate-400"
+                                >
+                                  <span>⌑<span class="mt-2 block">Sin trabajos</span></span>
+                                </div>
+                              }
+                            </div>
+                          </div>
+                        }
+                      </div>
+                    </section>
+                  }
+                </div>
+              }
             </section>
           }
         </div>
@@ -212,20 +244,40 @@ export class ProductionBoardPage {
             (f === 'delay' && new Date(o.dueDate) < new Date())),
       );
   }
-  readonly groups = computed(() =>
-    this.store.workflows.flatMap((workflow) =>
-      workflow.groups.map((g) => ({
-        ...g,
-        id: `${workflow.id}-${g.id}`,
-        stages: g.stages.map((s) => ({
-          ...s,
-          orders: this.orders().filter((o) => o.location === 'LAB' && o.currentStageId === s.id),
+  readonly collapsedWorkflows = signal<Set<string>>(new Set());
+  readonly workflowBoards = computed(() =>
+    this.store.workflows.map((workflow) => {
+      const workflowOrders = this.orders().filter((o) => o.workflowId === workflow.id);
+      return {
+        id: workflow.id,
+        name: workflow.name,
+        orders: workflowOrders,
+        groups: workflow.groups.map((group) => ({
+          ...group,
+          stages: group.stages.map((stage) => ({
+            ...stage,
+            orders: workflowOrders.filter(
+              (order) => order.location === 'LAB' && order.currentStageId === stage.id,
+            ),
+          })),
+          orders: workflowOrders.filter(
+            (order) =>
+              order.location === 'LAB' &&
+              group.stages.some((stage) => stage.id === order.currentStageId),
+          ),
         })),
-        orders: this.orders().filter(
-          (o) => o.location === 'LAB' && g.stages.some((s) => s.id === o.currentStageId),
-        ),
-      })),
-    ),
+      };
+    }),
   );
+  isCollapsed(id: string) {
+    return this.collapsedWorkflows().has(id);
+  }
+  toggleWorkflow(id: string) {
+    this.collapsedWorkflows.update((current) => {
+      const next = new Set(current);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
   readonly dentistOrders = computed(() => this.orders().filter((o) => o.location === 'DENTIST'));
 }
