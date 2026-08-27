@@ -512,62 +512,74 @@ export class DentistsPage {
 }
 @Component({
   standalone: true,
+  imports: [RouterLink],
   template: `@if (order(); as o) {
-    <main class="mx-auto min-h-dvh max-w-md bg-[var(--bg-app)] p-5 pb-40">
-      <header class="flex items-start justify-between">
-        <div>
-          <p class="text-xl font-black tracking-tight text-[var(--navy-950)]">DENTALOS</p>
-          <p class="mt-1 text-sm font-bold text-slate-500">OT #{{ o.number }}</p>
+      <main class="mx-auto min-h-dvh max-w-md bg-[var(--bg-app)] p-5 pb-40">
+        <header class="flex items-start justify-between">
+          <div>
+            <p class="text-xl font-black tracking-tight text-[var(--navy-950)]">DENTALOS</p>
+            <p class="mt-1 text-sm font-bold text-slate-500">OT #{{ o.number }}</p>
+          </div>
+          <span class="rounded-lg border border-slate-300 px-3 py-2 text-xl">×</span>
+        </header>
+        <section class="surface mt-8 overflow-hidden">
+          <div class="flex justify-between bg-indigo-50 px-5 py-3">
+            <p class="section-label text-slate-700">Detalles de orden</p>
+            @if (o.priority === 'URGENT') {
+              <span class="rounded bg-red-600 px-2 py-1 text-xs font-bold text-white">URGENTE</span>
+            }
+          </div>
+          <div class="p-5">
+            <h1 class="text-2xl font-bold">{{ store.type(o)?.name }}</h1>
+            <p class="mt-2 text-lg text-slate-600">
+              {{ store.dentist(o)?.name }} · {{ o.patientReference }}
+            </p>
+            <p class="mt-6 border-t pt-4 text-lg font-bold">Entrega: {{ dateShort(o.dueDate) }}</p>
+          </div>
+        </section>
+        <section class="surface mt-5 border-l-4 border-l-violet-700 p-5">
+          <p class="text-sm font-bold text-violet-800">
+            {{ o.location === 'LAB' ? 'EN LABORATORIO' : 'EN CONSULTORIO' }}
+          </p>
+          <p class="mt-3 text-xl">
+            Etapa: <b>{{ store.stage(o)?.name }}</b>
+          </p>
+        </section>
+        <div class="mt-7 grid grid-cols-3 gap-3">
+          <button class="button-secondary min-h-20">Foto</button
+          ><button
+            (click)="store.rework(o.id, store.stages(o)[0].id, 'Corrección solicitada')"
+            class="button-secondary min-h-20"
+          >
+            Corrección</button
+          ><button (click)="note(o.id)" class="button-secondary min-h-20">Nota</button>
         </div>
-        <span class="rounded-lg border border-slate-300 px-3 py-2 text-xl">×</span>
-      </header>
-      <section class="surface mt-8 overflow-hidden">
-        <div class="flex justify-between bg-indigo-50 px-5 py-3">
-          <p class="section-label text-slate-700">Detalles de orden</p>
-          @if (o.priority === 'URGENT') {
-            <span class="rounded bg-red-600 px-2 py-1 text-xs font-bold text-white">URGENTE</span>
+        <div class="fixed inset-x-0 bottom-0 border-t bg-white p-4">
+          @if (o.location === 'LAB') {
+            <button (click)="store.advance(o.id)" class="button-primary min-h-14 w-full">
+              ✓ TERMINÉ MI ETAPA</button
+            ><button (click)="store.sendToDentist(o.id)" class="button-secondary mt-2 w-full">
+              SALE AL CONSULTORIO
+            </button>
+          } @else {
+            <button (click)="store.returnToLab(o.id)" class="button-primary min-h-14 w-full">
+              ✓ REGRESÓ AL LABORATORIO
+            </button>
           }
         </div>
-        <div class="p-5">
-          <h1 class="text-2xl font-bold">{{ store.type(o)?.name }}</h1>
-          <p class="mt-2 text-lg text-slate-600">
-            {{ store.dentist(o)?.name }} · {{ o.patientReference }}
+      </main>
+    } @else {
+      <main class="grid min-h-dvh place-items-center bg-[var(--bg-app)] p-6">
+        <section class="max-w-sm text-center">
+          <p class="page-kicker">QR no válido</p>
+          <h1 class="mt-2 text-2xl font-bold">Orden no encontrada</h1>
+          <p class="mt-3 text-slate-600">
+            El código QR no corresponde a una orden válida o fue reemplazado.
           </p>
-          <p class="mt-6 border-t pt-4 text-lg font-bold">Entrega: {{ dateShort(o.dueDate) }}</p>
-        </div>
-      </section>
-      <section class="surface mt-5 border-l-4 border-l-violet-700 p-5">
-        <p class="text-sm font-bold text-violet-800">
-          {{ o.location === 'LAB' ? 'EN LABORATORIO' : 'EN CONSULTORIO' }}
-        </p>
-        <p class="mt-3 text-xl">
-          Etapa: <b>{{ store.stage(o)?.name }}</b>
-        </p>
-      </section>
-      <div class="mt-7 grid grid-cols-3 gap-3">
-        <button class="button-secondary min-h-20">Foto</button
-        ><button
-          (click)="store.rework(o.id, store.stages(o)[0].id, 'Corrección solicitada')"
-          class="button-secondary min-h-20"
-        >
-          Corrección</button
-        ><button (click)="note(o.id)" class="button-secondary min-h-20">Nota</button>
-      </div>
-      <div class="fixed inset-x-0 bottom-0 border-t bg-white p-4">
-        @if (o.location === 'LAB') {
-          <button (click)="store.advance(o.id)" class="button-primary min-h-14 w-full">
-            ✓ TERMINÉ MI ETAPA</button
-          ><button (click)="store.sendToDentist(o.id)" class="button-secondary mt-2 w-full">
-            SALE AL CONSULTORIO
-          </button>
-        } @else {
-          <button (click)="store.returnToLab(o.id)" class="button-primary min-h-14 w-full">
-            ✓ REGRESÓ AL LABORATORIO
-          </button>
-        }
-      </div>
-    </main>
-  }`,
+          <a routerLink="/today" class="button-secondary mt-6 inline-block">Volver al inicio</a>
+        </section>
+      </main>
+    }`,
 })
 export class FloorModePage {
   store = inject(WorkOrderStore);

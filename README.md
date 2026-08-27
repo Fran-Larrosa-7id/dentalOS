@@ -1,6 +1,16 @@
 # DentalOS
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.1.3.
+DentalOS v0.1 stores work orders in LocalStorage. Orders created on one device are not synchronized to another device yet.
+
+QR codes use the public GitHub Pages URL and can open Floor Mode from any device. For cross-device demos, use seeded demo orders such as OT #1842 (token `demo-1842-a9f4`). Actions performed from another device remain local until the SaaS backend is implemented.
+
+## GitHub Pages
+
+```bash
+npm run deploy
+```
+
+The production build uses `/dentalOS/` as its base path and publishes to GitHub Pages. The public demo URL is `https://fran-larrosa-7id.github.io/dentalOS/`.
 
 ## Development server
 

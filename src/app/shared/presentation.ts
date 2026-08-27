@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import QRCode from 'qrcode';
 import { WorkOrder } from '../domain/models';
 import { WorkOrderStore } from '../core/work-order.store';
+import { PublicUrlService } from '../core/public-url.service';
 import { IconComponent } from './icon/icon.component';
 
 export const dateShort = (value: string) =>
@@ -169,13 +170,13 @@ export class SmartLabelComponent {
     return this._order;
   }
   readonly store = inject(WorkOrderStore);
+  private readonly publicUrl = inject(PublicUrlService);
   readonly qrData = signal('');
   readonly dateShort = dateShort;
   async generate(token: string) {
     if (typeof window === 'undefined' || !token) return;
-    const origin = window.location.origin;
     this.qrData.set(
-      await QRCode.toDataURL(`${origin}/q/${token}`, {
+      await QRCode.toDataURL(this.publicUrl.qrUrl(token), {
         width: 256,
         margin: 1,
         errorCorrectionLevel: 'M',
