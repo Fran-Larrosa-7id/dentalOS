@@ -537,13 +537,19 @@ export class DentistsPage {
             <p class="mt-6 border-t pt-4 text-lg font-bold">Entrega: {{ dateShort(o.dueDate) }}</p>
           </div>
         </section>
-        <section class="surface mt-5 border-l-4 border-l-violet-700 p-5">
-          <p class="text-sm font-bold text-violet-800">
-            {{ o.location === 'LAB' ? 'EN LABORATORIO' : 'EN CONSULTORIO' }}
-          </p>
-          <p class="mt-3 text-xl">
-            Etapa: <b>{{ store.stage(o)?.name }}</b>
-          </p>
+        <section class="surface mt-5 p-5">
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <p class="section-label">Etapa actual</p>
+              <p class="mt-2 text-2xl font-bold">{{ store.stage(o)?.name }}</p>
+            </div>
+            <div>
+              <p class="section-label">{{ o.location === 'LAB' ? 'Siguiente' : 'Ubicación' }}</p>
+              <p class="mt-2 text-lg font-bold" [class.text-violet-700]="o.location === 'DENTIST'">
+                {{ nextMovement(o) }}
+              </p>
+            </div>
+          </div>
         </section>
         <div class="mt-7 grid grid-cols-3 gap-3">
           <button class="button-secondary min-h-20">Foto</button
@@ -554,7 +560,7 @@ export class DentistsPage {
             Corrección</button
           ><button (click)="note(o.id)" class="button-secondary min-h-20">Nota</button>
         </div>
-        <div class="fixed inset-x-0 bottom-0 border-t bg-white p-4">
+        <div class="hidden">
           @if (o.location === 'LAB') {
             <button (click)="store.advance(o.id)" class="button-primary min-h-14 w-full">
               ✓ TERMINÉ MI ETAPA</button
@@ -566,6 +572,15 @@ export class DentistsPage {
               ✓ REGRESÓ AL LABORATORIO
             </button>
           }
+        </div>
+        <div class="fixed inset-x-0 bottom-0 border-t bg-white p-4">
+          <button
+            (click)="performPrimary(o)"
+            [disabled]="o.operationalStatus === 'COMPLETED'"
+            class="button-primary min-h-14 w-full disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {{ primaryLabel(o) }}
+          </button>
         </div>
       </main>
     } @else {
@@ -586,6 +601,31 @@ export class FloorModePage {
   route = inject(ActivatedRoute);
   order = computed(() => this.store.byToken(this.route.snapshot.paramMap.get('token') ?? ''));
   dateShort = dateShort;
+  private requiresDentistVisit(order: WorkOrder) {
+    return order.location === 'LAB' && order.currentStageId === 'prueba';
+  }
+  nextMovement(order: WorkOrder) {
+    if (order.operationalStatus === 'COMPLETED') return 'Trabajo completado';
+    if (order.location === 'DENTIST') return 'Laboratorio';
+    if (this.requiresDentistVisit(order)) return 'Enviar al consultorio';
+    const stages = this.store.stages(order);
+    const next = stages[stages.findIndex((stage) => stage.id === order.currentStageId) + 1];
+    return next ? next.name : 'Finalizar trabajo';
+  }
+  primaryLabel(order: WorkOrder) {
+    if (order.operationalStatus === 'COMPLETED') return 'Trabajo finalizado';
+    if (order.location === 'DENTIST') return 'Registrar regreso al laboratorio';
+    if (this.requiresDentistVisit(order)) return 'Enviar al consultorio';
+    const stage = this.store.stage(order)?.name ?? 'etapa';
+    const next = this.nextMovement(order);
+    return next === 'Finalizar trabajo' ? 'Finalizar trabajo' : `Finalizar ${stage} → ${next}`;
+  }
+  performPrimary(order: WorkOrder) {
+    if (order.operationalStatus === 'COMPLETED') return;
+    if (order.location === 'DENTIST') return this.store.returnToLab(order.id);
+    if (this.requiresDentistVisit(order)) return this.store.sendToDentist(order.id);
+    return this.store.advance(order.id);
+  }
   note(id: string) {
     let text = window.prompt('Agregar nota');
     if (text) this.store.addNote(id, text);
