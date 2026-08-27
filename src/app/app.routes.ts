@@ -1,9 +1,11 @@
 import { Routes } from '@angular/router';
-import { DentistsPage, FloorModePage, OrdersPage } from './features/pages';
+import { FloorModePage, OrdersPage } from './features/pages';
 import { ModernNewOrderPage } from './features/new-order.page';
 import { ModernOrderDetailPage } from './features/order-detail.page';
 import { KanbanTodayPage } from './features/today-kanban.page';
 import { ProductionBoardPage } from './features/production-board.page';
+import { DentistsComingSoonPage } from './features/dentists-coming-soon.page';
+import { SettingsComingSoonPage } from './features/settings-coming-soon.page';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'today' },
@@ -13,7 +15,7 @@ export const routes: Routes = [
   { path: 'orders/new', component: ModernNewOrderPage, title: 'Nueva orden · DentalOS' },
   { path: 'orders/:id', component: ModernOrderDetailPage, title: 'Orden · DentalOS' },
   { path: 'q/:token', component: FloorModePage, title: 'Floor Mode · DentalOS' },
-  { path: 'dentists', component: DentistsPage, title: 'Odontólogos · DentalOS' },
-  { path: 'settings', component: DentistsPage, title: 'Configuración · DentalOS' },
+  { path: 'dentists', component: DentistsComingSoonPage, title: 'Odontólogos · DentalOS' },
+  { path: 'settings', component: SettingsComingSoonPage, title: 'Configuración · DentalOS' },
   { path: '**', redirectTo: 'today' },
 ];
