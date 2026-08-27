@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { Location } from '@angular/common';
 import { FormsModule, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { WorkOrderStore } from '../core/work-order.store';
@@ -515,12 +516,15 @@ export class DentistsPage {
   imports: [RouterLink],
   template: `@if (order(); as o) {
       <main class="mx-auto min-h-dvh max-w-md bg-[var(--bg-app)] p-5 pb-40">
-        <header class="flex items-start justify-between">
+        <header class="floor-header flex items-start justify-between">
           <div>
             <p class="text-xl font-black tracking-tight text-[var(--navy-950)]">DENTALOS</p>
             <p class="mt-1 text-sm font-bold text-slate-500">OT #{{ o.number }}</p>
           </div>
           <span class="rounded-lg border border-slate-300 px-3 py-2 text-xl">×</span>
+          @if (canGoBack) {
+            <button (click)="goBack()" class="button-secondary px-3 py-2 text-sm">← Volver</button>
+          }
         </header>
         <section class="surface mt-8 overflow-hidden">
           <div class="flex justify-between bg-indigo-50 px-5 py-3">
@@ -551,9 +555,15 @@ export class DentistsPage {
             </div>
           </div>
         </section>
-        <div class="mt-7 grid grid-cols-3 gap-3">
-          <button class="button-secondary min-h-20">Foto</button
-          ><button
+        <div
+          class="mt-7 grid gap-3"
+          [class.grid-cols-2]="o.operationalStatus === 'COMPLETED'"
+          [class.grid-cols-3]="o.operationalStatus !== 'COMPLETED'"
+        >
+          @if (o.operationalStatus !== 'COMPLETED') {
+            <button class="button-secondary min-h-20">Foto</button>
+          }
+          <button
             (click)="store.rework(o.id, store.stages(o)[0].id, 'Corrección solicitada')"
             class="button-secondary min-h-20"
           >
@@ -581,6 +591,11 @@ export class DentistsPage {
           >
             {{ primaryLabel(o) }}
           </button>
+          @if (o.operationalStatus === 'COMPLETED') {
+            <p class="mt-2 text-center text-sm text-slate-500">
+              Listo. No quedan acciones pendientes para este trabajo.
+            </p>
+          }
         </div>
       </main>
     } @else {
@@ -599,6 +614,9 @@ export class DentistsPage {
 export class FloorModePage {
   store = inject(WorkOrderStore);
   route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly location = inject(Location);
+  readonly canGoBack = !!this.router.getCurrentNavigation()?.previousNavigation;
   order = computed(() => this.store.byToken(this.route.snapshot.paramMap.get('token') ?? ''));
   dateShort = dateShort;
   private requiresDentistVisit(order: WorkOrder) {
@@ -613,7 +631,7 @@ export class FloorModePage {
     return next ? next.name : 'Finalizar trabajo';
   }
   primaryLabel(order: WorkOrder) {
-    if (order.operationalStatus === 'COMPLETED') return 'Trabajo finalizado';
+    if (order.operationalStatus === 'COMPLETED') return '✓ Trabajo finalizado';
     if (order.location === 'DENTIST') return 'Registrar regreso al laboratorio';
     if (this.requiresDentistVisit(order)) return 'Enviar al consultorio';
     const stage = this.store.stage(order)?.name ?? 'etapa';
@@ -625,6 +643,9 @@ export class FloorModePage {
     if (order.location === 'DENTIST') return this.store.returnToLab(order.id);
     if (this.requiresDentistVisit(order)) return this.store.sendToDentist(order.id);
     return this.store.advance(order.id);
+  }
+  goBack() {
+    this.location.back();
   }
   note(id: string) {
     let text = window.prompt('Agregar nota');

@@ -102,6 +102,9 @@ app-smart-label > section {
   border-color: #0f172a;
   box-shadow: none;
 }
+.floor-header > span {
+  display: none;
+}
 
 @media (min-width: 1024px) {
   main {

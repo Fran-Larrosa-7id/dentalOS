@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { UpperCasePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { WorkOrderStore } from '../core/work-order.store';
+import { WorkOrder } from '../domain/models';
 import {
   SmartLabelComponent,
   TimelineComponent,
@@ -21,7 +22,7 @@ import {
         </p>
         <h1 class="page-title">{{ store.type(o)?.name }}</h1>
         <p class="page-subtitle">{{ store.dentist(o)?.name }} · {{ o.patientReference }}</p>
-        <div class="mt-4 flex flex-wrap gap-2">
+        <div class="hidden">
           <span
             class="rounded-sm px-2 py-1 text-[11px] font-bold"
             [class.location-lab]="o.location === 'LAB'"
@@ -46,7 +47,23 @@ import {
       <div class="space-y-8">
         <section class="border-y border-slate-200 py-6">
           <p class="section-label">Estado actual</p>
-          <div class="mt-4 grid gap-5 sm:grid-cols-[1fr_auto]">
+          <div class="mt-4 grid gap-5 border-y border-slate-200 py-5 sm:grid-cols-3">
+            <div>
+              <p class="section-label">Ubicación actual</p>
+              <p class="mt-2 text-lg font-bold" [class.text-violet-700]="o.location === 'DENTIST'">
+                {{ o.location === 'LAB' ? 'En laboratorio' : 'En consultorio' }}
+              </p>
+            </div>
+            <div>
+              <p class="section-label">Etapa actual</p>
+              <p class="mt-2 text-xl font-bold">{{ store.stage(o)?.name }}</p>
+            </div>
+            <div>
+              <p class="section-label">Siguiente</p>
+              <p class="mt-2 text-lg font-bold">{{ nextMovement(o) }}</p>
+            </div>
+          </div>
+          <div class="hidden">
             <div>
               <p class="text-sm font-semibold text-slate-600">
                 {{ o.location === 'LAB' ? 'En laboratorio' : 'En consultorio' }}
@@ -66,7 +83,7 @@ import {
               </p>
             </div>
           </div>
-          <div class="mt-6 flex flex-wrap gap-2">
+          <div class="hidden">
             @if (o.location === 'LAB') {
               <button (click)="store.advance(o.id)" class="button-primary">
                 ✓ Terminé mi etapa</button
@@ -76,6 +93,23 @@ import {
             } @else {
               <button (click)="store.returnToLab(o.id)" class="button-primary">
                 ✓ Regresó al laboratorio
+              </button>
+            }
+            <button (click)="rework.set(!rework())" class="button-secondary">
+              Registrar corrección
+            </button>
+          </div>
+          <div class="mt-6 flex flex-wrap gap-2">
+            <button
+              (click)="performPrimary(o)"
+              [disabled]="o.operationalStatus === 'COMPLETED'"
+              class="button-primary disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {{ primaryLabel(o) }}
+            </button>
+            @if (o.location === 'LAB' && o.operationalStatus !== 'COMPLETED') {
+              <button (click)="store.sendToDentist(o.id)" class="button-secondary">
+                Enviar al consultorio
               </button>
             }
             <button (click)="rework.set(!rework())" class="button-secondary">
@@ -162,6 +196,26 @@ export class ModernOrderDetailPage {
   rework = signal(false);
   dateShort = dateShort;
   relativeTime = relativeTime;
+  nextMovement(order: WorkOrder) {
+    if (order.operationalStatus === 'COMPLETED') return 'Trabajo completado';
+    if (order.location === 'DENTIST') return 'Laboratorio';
+    const stages = this.store.stages(order);
+    const next = stages[stages.findIndex((stage) => stage.id === order.currentStageId) + 1];
+    return next ? next.name : 'Finalizar trabajo';
+  }
+  primaryLabel(order: WorkOrder) {
+    if (order.operationalStatus === 'COMPLETED') return 'Trabajo finalizado';
+    if (order.location === 'DENTIST') return 'Registrar regreso al laboratorio';
+    const current = this.store.stage(order)?.name ?? 'etapa';
+    const next = this.nextMovement(order);
+    return next === 'Finalizar trabajo' ? 'Finalizar trabajo' : `Finalizar ${current} → ${next}`;
+  }
+  performPrimary(order: WorkOrder) {
+    if (order.operationalStatus === 'COMPLETED') return;
+    return order.location === 'DENTIST'
+      ? this.store.returnToLab(order.id)
+      : this.store.advance(order.id);
+  }
   isNear(value: string) {
     return new Date(value).getTime() - Date.now() < 3 * 86400000;
   }
