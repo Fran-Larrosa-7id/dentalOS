@@ -1,6 +1,7 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { dentists, seedOrders, technicians, workflows, workTypes } from '../data/seed';
 import { EventType, Location, Priority, WorkOrder } from '../domain/models';
+import { resolveOrderTransition } from './order-transition';
 
 const STORAGE_KEY = 'dentalos.work-orders.v1';
 @Injectable({ providedIn: 'root' })
@@ -69,6 +70,21 @@ export class WorkOrderStore {
         .sort((a, b) => a.order - b.order) ?? []
     );
   }
+  transition(order: WorkOrder) {
+    return resolveOrderTransition(order, this.stages(order));
+  }
+  applyPrimaryTransition(order: WorkOrder) {
+    switch (this.transition(order).primaryAction) {
+      case 'ADVANCE':
+        return this.advance(order.id);
+      case 'SEND_TO_DENTIST':
+        return this.sendToDentist(order.id);
+      case 'RETURN_TO_LAB':
+        return this.returnToLab(order.id);
+      default:
+        return;
+    }
+  }
   create(input: {
     dentistId: string;
     patientReference: string;
@@ -113,6 +129,8 @@ export class WorkOrderStore {
     return { id: crypto.randomUUID(), type, timestamp: new Date().toISOString(), ...extras };
   }
   advance(id: string) {
+    const current = this.order(id);
+    if (!current || this.transition(current).primaryAction !== 'ADVANCE') return;
     this.update(id, (order) => {
       const stages = this.stages(order);
       const next = stages[stages.findIndex((stage) => stage.id === order.currentStageId) + 1];

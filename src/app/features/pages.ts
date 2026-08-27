@@ -619,30 +619,14 @@ export class FloorModePage {
   readonly canGoBack = !!this.router.getCurrentNavigation()?.previousNavigation;
   order = computed(() => this.store.byToken(this.route.snapshot.paramMap.get('token') ?? ''));
   dateShort = dateShort;
-  private requiresDentistVisit(order: WorkOrder) {
-    return order.location === 'LAB' && order.currentStageId === 'prueba';
-  }
   nextMovement(order: WorkOrder) {
-    if (order.operationalStatus === 'COMPLETED') return 'Trabajo completado';
-    if (order.location === 'DENTIST') return 'Laboratorio';
-    if (this.requiresDentistVisit(order)) return 'Enviar al consultorio';
-    const stages = this.store.stages(order);
-    const next = stages[stages.findIndex((stage) => stage.id === order.currentStageId) + 1];
-    return next ? next.name : 'Finalizar trabajo';
+    return this.store.transition(order).nextLabel;
   }
   primaryLabel(order: WorkOrder) {
-    if (order.operationalStatus === 'COMPLETED') return '✓ Trabajo finalizado';
-    if (order.location === 'DENTIST') return 'Registrar regreso al laboratorio';
-    if (this.requiresDentistVisit(order)) return 'Enviar al consultorio';
-    const stage = this.store.stage(order)?.name ?? 'etapa';
-    const next = this.nextMovement(order);
-    return next === 'Finalizar trabajo' ? 'Finalizar trabajo' : `Finalizar ${stage} → ${next}`;
+    return this.store.transition(order).primaryLabel;
   }
   performPrimary(order: WorkOrder) {
-    if (order.operationalStatus === 'COMPLETED') return;
-    if (order.location === 'DENTIST') return this.store.returnToLab(order.id);
-    if (this.requiresDentistVisit(order)) return this.store.sendToDentist(order.id);
-    return this.store.advance(order.id);
+    return this.store.applyPrimaryTransition(order);
   }
   goBack() {
     this.location.back();

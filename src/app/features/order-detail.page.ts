@@ -107,11 +107,6 @@ import {
             >
               {{ primaryLabel(o) }}
             </button>
-            @if (o.location === 'LAB' && o.operationalStatus !== 'COMPLETED') {
-              <button (click)="store.sendToDentist(o.id)" class="button-secondary">
-                Enviar al consultorio
-              </button>
-            }
             <button (click)="rework.set(!rework())" class="button-secondary">
               Registrar corrección
             </button>
@@ -197,24 +192,13 @@ export class ModernOrderDetailPage {
   dateShort = dateShort;
   relativeTime = relativeTime;
   nextMovement(order: WorkOrder) {
-    if (order.operationalStatus === 'COMPLETED') return 'Trabajo completado';
-    if (order.location === 'DENTIST') return 'Laboratorio';
-    const stages = this.store.stages(order);
-    const next = stages[stages.findIndex((stage) => stage.id === order.currentStageId) + 1];
-    return next ? next.name : 'Finalizar trabajo';
+    return this.store.transition(order).nextLabel;
   }
   primaryLabel(order: WorkOrder) {
-    if (order.operationalStatus === 'COMPLETED') return 'Trabajo finalizado';
-    if (order.location === 'DENTIST') return 'Registrar regreso al laboratorio';
-    const current = this.store.stage(order)?.name ?? 'etapa';
-    const next = this.nextMovement(order);
-    return next === 'Finalizar trabajo' ? 'Finalizar trabajo' : `Finalizar ${current} → ${next}`;
+    return this.store.transition(order).primaryLabel;
   }
   performPrimary(order: WorkOrder) {
-    if (order.operationalStatus === 'COMPLETED') return;
-    return order.location === 'DENTIST'
-      ? this.store.returnToLab(order.id)
-      : this.store.advance(order.id);
+    return this.store.applyPrimaryTransition(order);
   }
   isNear(value: string) {
     return new Date(value).getTime() - Date.now() < 3 * 86400000;
