@@ -66,15 +66,18 @@ select:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--primary) 25%, transparent);
   outline-offset: 2px;
 }
-input,
-select {
-  border-color: var(--border-strong) !important;
+input:not([type='checkbox']):not([type='radio']),
+select,
+textarea {
+  border: 1px solid var(--border-strong) !important;
   border-radius: 8px;
   background: var(--bg-surface);
+  color: var(--text-primary);
   min-height: 44px;
 }
-input:focus,
-select:focus {
+input:not([type='checkbox']):not([type='radio']):focus,
+select:focus,
+textarea:focus {
   border-color: var(--primary) !important;
   box-shadow: 0 0 0 3px rgb(37 84 232 / 0.12);
   outline: 0;

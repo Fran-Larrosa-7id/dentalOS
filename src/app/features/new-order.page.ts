@@ -15,13 +15,18 @@ import { DatePickerComponent } from '../shared/date-picker';
     </header>
     <section class="mt-7 grid gap-8 xl:grid-cols-[minmax(0,1fr)_360px]">
       <form [formGroup]="form" (ngSubmit)="submit()" class="border border-slate-200 bg-white p-6">
+        <p class="mb-6 border-l-2 border-blue-600 pl-3 text-sm text-slate-600">
+          Completá los campos marcados con <span class="font-bold text-red-600">*</span> para crear
+          la orden.
+        </p>
         <div class="grid gap-5 sm:grid-cols-2">
           <div class="sm:col-span-2">
             <p class="technical-id text-[11px] font-bold text-blue-700">01</p>
             <p class="mt-1 text-sm font-bold">Identificación</p>
           </div>
           <label class="input-label sm:col-span-2"
-            >Odontólogo<select formControlName="dentistId">
+            >Odontólogo <span class="text-red-600">*</span
+            ><select formControlName="dentistId" aria-required="true">
               <option value="">Seleccionar odontólogo</option>
               @for (d of store.dentists; track d.id) {
                 <option [value]="d.id">{{ d.name }}</option>
@@ -29,14 +34,16 @@ import { DatePickerComponent } from '../shared/date-picker';
             </select></label
           >
           <label class="input-label sm:col-span-2"
-            >Paciente / referencia<input formControlName="patientReference" placeholder="Ej. MG"
+            >Paciente / referencia <span class="text-red-600">*</span
+            ><input formControlName="patientReference" placeholder="Ej. MG" aria-required="true"
           /></label>
           <div class="sm:col-span-2 border-t border-slate-200 pt-5">
             <p class="technical-id text-[11px] font-bold text-blue-700">02</p>
             <p class="mt-1 text-sm font-bold">Trabajo</p>
           </div>
           <label class="input-label sm:col-span-2"
-            >Tipo de trabajo<select formControlName="workTypeId">
+            >Tipo de trabajo <span class="text-red-600">*</span
+            ><select formControlName="workTypeId" aria-required="true">
               <option value="">Seleccionar tipo</option>
               @for (t of store.workTypes; track t.id) {
                 <option [value]="t.id">{{ t.name }}</option>
@@ -45,7 +52,8 @@ import { DatePickerComponent } from '../shared/date-picker';
           >
           <label class="input-label">Color<input formControlName="color" placeholder="A2" /></label>
           <label class="input-label"
-            >Fecha de entrega<app-date-picker class="mt-2 block" formControlName="dueDate"
+            >Fecha de entrega <span class="text-red-600">*</span
+            ><app-date-picker class="mt-2 block" formControlName="dueDate"
           /></label>
           <div class="sm:col-span-2 border-t border-slate-200 pt-5">
             <p class="technical-id text-[11px] font-bold text-blue-700">03</p>
