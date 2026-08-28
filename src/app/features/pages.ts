@@ -514,7 +514,7 @@ export class DentistsPage {
   standalone: true,
   imports: [RouterLink],
   template: `@if (order(); as o) {
-      <main class="mx-auto min-h-dvh max-w-md bg-[var(--bg-app)] p-5 pb-40">
+      <main class="mx-auto min-h-dvh max-w-md bg-[var(--bg-app)] p-5">
         <header class="floor-header flex items-start justify-between">
           <div>
             <div class="flex items-center gap-2">
@@ -590,7 +590,7 @@ export class DentistsPage {
             </button>
           }
         </div>
-        <div class="fixed inset-x-0 bottom-0 border-t bg-white p-4">
+        <div class="floor-primary-action sticky bottom-0 z-20 mt-6 -mx-5 border-t border-slate-200 bg-white/95 p-4 backdrop-blur">
           <button
             (click)="performPrimary(o)"
             [disabled]="o.operationalStatus === 'COMPLETED'"
