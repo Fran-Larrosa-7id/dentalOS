@@ -14,7 +14,7 @@ import { RouterLink } from '@angular/router';
   template: `
     <header><p class="page-kicker">Odontólogos</p></header>
     <section
-      class="mt-7 grid items-start gap-12 xl:grid-cols-[minmax(0,.72fr)_minmax(0,1fr)] xl:gap-16"
+      class="future-hero mt-7 grid items-start gap-12 xl:grid-cols-[minmax(0,.72fr)_minmax(0,1fr)] xl:gap-16"
     >
       <div class="max-w-xl pt-2">
         <p class="technical-id text-[11px] font-bold tracking-[.14em] text-blue-700">
@@ -48,7 +48,7 @@ import { RouterLink } from '@angular/router';
       </div>
 
       <section
-        class="relative overflow-hidden border border-slate-300 bg-white shadow-[0_12px_30px_rgb(15_23_42_/_0.06)]"
+        class="future-preview relative overflow-hidden border border-slate-300 bg-white shadow-[0_12px_30px_rgb(15_23_42_/_0.06)]"
       >
         <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4 sm:px-6">
           <div>

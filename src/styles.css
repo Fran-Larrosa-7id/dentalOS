@@ -316,6 +316,12 @@ app-smart-label > section {
     0 0 0 4px rgb(244 247 251 / 0.27),
     0 0 18px rgb(244 247 251 / 0.18);
 }
+.future-hero { position: relative; isolation: isolate; overflow: hidden; border-radius: 18px; padding: clamp(24px, 4vw, 48px); background: linear-gradient(135deg, rgb(0 135 203 / .09), rgb(62 64 149 / .07) 52%, rgb(244 247 251 / .1)); }
+.future-hero::before, .future-hero::after { position: absolute; z-index: -1; border: 1px solid rgb(0 135 203 / .18); border-radius: 999px; content: ''; pointer-events: none; }
+.future-hero::before { top: -180px; left: -165px; width: 360px; height: 360px; background: radial-gradient(circle, rgb(0 135 203 / .14), transparent 65%); }
+.future-hero::after { right: -145px; bottom: -180px; width: 330px; height: 330px; border-color: rgb(62 64 149 / .2); background: radial-gradient(circle, rgb(62 64 149 / .16), transparent 65%); }
+.future-preview { border-radius: 14px; background: rgb(255 255 255 / .86) !important; backdrop-filter: blur(8px); }
+@media (max-width: 639px) { .future-hero { margin-inline: -4px; padding: 24px 20px; border-radius: 14px; } }
 @keyframes brand-orbit-spin {
   to {
     transform: rotate(360deg);
