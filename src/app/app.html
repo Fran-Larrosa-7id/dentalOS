@@ -3,16 +3,22 @@
 } @else {
   <div class="min-h-dvh bg-[var(--bg-app)] lg:grid lg:grid-cols-[256px_1fr]">
     <aside
-      class="border-b border-slate-800 bg-[var(--navy-950)] px-4 py-6 text-slate-100 lg:min-h-dvh lg:border-r lg:border-b-0 lg:px-5"
+      class="app-shell-sidebar border-b border-slate-800 px-4 py-6 text-slate-100 lg:min-h-dvh lg:border-r lg:border-b-0 lg:px-5"
     >
-      <a routerLink="/today" class="flex items-center gap-3 px-2 text-xl font-bold tracking-tight"
-        ><span class="grid h-8 w-8 place-items-center rounded-lg bg-blue-600 text-sm">D</span
-        ><span
-          >DentalOS<small
-            class="mt-0.5 block text-[10px] font-medium tracking-[.14em] text-slate-400"
-            >OPERATIONS</small
-          ></span
-        ></a
+      <div class="brand-orbit brand-orbit-top" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <div class="brand-orbit brand-orbit-bottom" aria-hidden="true">
+        <i></i><i></i><i></i><i></i>
+      </div>
+      <a
+        routerLink="/today"
+        aria-label="Ir al inicio de DentalOS"
+        class="flex items-center gap-3 px-2 text-[40px] font-bold tracking-tight text-white lg:gap-2.5 lg:text-[22px]"
+        ><img
+          src="assets/detanlos-isologo-color.svg"
+          alt=""
+          aria-hidden="true"
+          class="h-11 w-11 shrink-0 object-contain lg:h-10 lg:w-10"
+        /><span>DentalOS</span></a
       >
       <p class="mt-10 px-3 text-[10px] font-bold tracking-[.18em] text-slate-500">OPERACIÓN</p>
       <nav
@@ -47,7 +53,7 @@
       </nav>
       <a
         routerLink="/orders/new"
-        class="mt-8 flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-bold text-white shadow-sm hover:bg-blue-500"
+        class="brand-cta mt-8 flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-center text-sm font-bold text-white shadow-sm"
         ><app-icon name="plus" class="size-4" />Nueva orden</a
       >
       <a

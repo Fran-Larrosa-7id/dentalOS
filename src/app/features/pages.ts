@@ -10,7 +10,6 @@ import {
   dateShort,
   relativeTime,
 } from '../shared/presentation';
-import { DatePickerComponent } from '../shared/date-picker';
 import { WorkOrder } from '../domain/models';
 
 @Component({
@@ -209,7 +208,7 @@ export class ProductionPage {
 }
 @Component({
   standalone: true,
-  imports: [ReactiveFormsModule, SmartLabelComponent],
+  imports: [ReactiveFormsModule],
   template: `<header>
       <p class="page-kicker">Nueva orden</p>
       <h1 class="page-title">Registrá un nuevo trabajo en segundos</h1>
@@ -518,7 +517,15 @@ export class DentistsPage {
       <main class="mx-auto min-h-dvh max-w-md bg-[var(--bg-app)] p-5 pb-40">
         <header class="floor-header flex items-start justify-between">
           <div>
-            <p class="text-xl font-black tracking-tight text-[var(--navy-950)]">DENTALOS</p>
+            <div class="flex items-center gap-2">
+              <img
+                src="assets/detanlos-isologo-color.svg"
+                alt=""
+                aria-hidden="true"
+                class="h-7 w-7 object-contain"
+              />
+              <p class="text-lg font-black tracking-[.04em] text-[var(--navy-950)]">DENTALOS</p>
+            </div>
             <p class="mt-1 text-sm font-bold text-slate-500">OT #{{ o.number }}</p>
           </div>
           <span class="rounded-lg border border-slate-300 px-3 py-2 text-xl">×</span>
